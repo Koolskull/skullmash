@@ -6,7 +6,7 @@ Cut out / draw closed shapes → inflate into soft 3D meshes → place control p
 
 Designed for the music + visuals production pipeline inside [K-OS-III](https://github.com/Koolskull/K-OS-III) (Datamoshpit, Stardrain, shotlists, etc.).
 
-> Early v0.1 — functional prototype. The inflation is a simplified radial/centroid balloon (not the full ARAP-L from the original Monster Mash paper). Good enough for organic/cartoony production assets and further iteration.
+> **v0.1.1** — audited. Dead code removed, earcut triangulation (concave-safe), proper Three.js dispose, object-URL leaks fixed, status/hook correctness improved.
 
 ## Quick start
 
@@ -17,44 +17,35 @@ npm install
 npm run dev
 ```
 
-Open the local URL. Dark K-OS chrome, monospace, green accent.
-
 ## Workflow
 
-1. **DRAW** — Click to place points of a closed shape. Right-click (or CLOSE SHAPE) when ≥3 points.
+1. **DRAW** — Click points to form a closed shape. Right-click, Enter, or CLOSE SHAPE when ≥3 points.
 2. Optional: load a background image and trace cutouts over it.
-3. **INFLATE** — Meshes are generated automatically (centroid-lifted fan for volume).
-4. **ANIMATE** — Click yellow pins onto the 2D view. Move the timeline slider and hit REC KF to store keyframes.
+3. **INFLATE** — Meshes rebuild automatically (earcut + radial height falloff).
+4. **ANIMATE** — Click yellow pins. Move the timeline and hit REC KF.
 5. **EXPORT**
-   - `.glb` — binary glTF of the current inflated meshes (Three.js GLTFExporter).
-   - `.json` — project + pin + keyframe data ready for custom players or Stardrain / K-OS visual systems.
+   - `.glb` — binary glTF of the inflated meshes
+   - `.json` — project + pin + keyframe data for Stardrain / custom players
 
 ## Integration with K-OS-III
 
-This repo is intentionally a clean, standalone Vite + React app so it can be:
+Standalone Vite + React app that can later become a windowed app inside the K-OS desktop (`src/components/apps/skullmash/...`). Aesthetic already matches KOOLDRAW / DATAMOSHPIT / SHOTLIST.
 
-- Used independently, or
-- Ported as a new windowed app (`src/components/apps/skullmash/SkullMashApp.tsx`) inside the K-OS desktop shell.
+## Audit notes (v0.1.1)
 
-The visual language (titlebar, toolbar, status bar, ☦, ALL-CAPS buttons, dark panels) already matches existing K-OS apps (KOOLDRAW, DATAMOSHPIT, SHOTLIST…).
+- Removed unused helpers and the discarded earcut path; now uses earcut properly.
+- Shared material + full geometry/material dispose on rebuild and unmount.
+- Background image object URLs are revoked.
+- Right-click / left-click handling cleaned; status no longer uses stale closures.
+- Keyboard Enter closes the current shape; dependency arrays corrected.
 
-## Roadmap (production context)
+## Roadmap
 
-- [ ] Proper constrained triangulation + better height field (distance-to-boundary or medial axis)
-- [ ] Pin-based ARAP-style or Laplacian deformation driven by keyframes
-- [ ] Multi-region depth ordering (like original Monster Mash layers)
-- [ ] Direct JSON track format that Datamoshpit / Stardrain can scrub
-- [ ] Embed mode for use inside other K-OS apps
-- [ ] Optional WASM port of core Monster Mash algorithms later
+- Better height field / multi-region depth order
+- Pin-driven deformation driven by keyframes
+- Embed mode for other K-OS apps
+- Optional future WASM path closer to original Monster Mash algorithms
 
-## Origin
-
-Inspired by the open-source [google/monster-mash](https://github.com/google/monster-mash) (SIGGRAPH Asia 2020) which is still live at https://monstermash.zone.  
-SKULLMASH is a new, K-OS-native tool focused on the exact exports and aesthetic needed for ongoing production work.
-
-## License
-
-Apache-2.0 (same spirit as the original Monster Mash release).  
-Code written for Koolskull / K-OS-III pipeline.
+Inspired by [google/monster-mash](https://github.com/google/monster-mash) (still live at monstermash.zone). Apache-2.0 spirit.
 
 ☦
