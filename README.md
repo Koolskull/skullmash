@@ -1,51 +1,43 @@
-# ☦ SKULLMASH
+# ◎ SKULLMASH
 
-**K-OS III native sketch-to-3D balloon tool**
+**Image-first freehand cutouts → soft 3D balloon inflate → pin keyframes → export `.glb` + JSON.**
 
-Cut out / draw closed shapes → inflate into soft 3D meshes → place control pins + record keyframes → export **binary glTF (.glb)** + **JSON animation / project data**.
+Designed for the [K-OS-III](https://github.com/Koolskull/K-OS-III) music/visuals pipeline. Workflow and paper-stage UX inspired by [Monster Mash](https://monstermash.zone) (Google, Apache-2.0 spirit).
 
-Designed for the music + visuals production pipeline inside [K-OS-III](https://github.com/Koolskull/K-OS-III) (Datamoshpit, Stardrain, shotlists, etc.).
+## Live demo
 
-> **v0.1.1** — audited. Dead code removed, earcut triangulation (concave-safe), proper Three.js dispose, object-URL leaks fixed, status/hook correctness improved.
+**GitHub Pages:** [https://koolskull.github.io/skullmash/](https://koolskull.github.io/skullmash/)
 
-## Quick start
+## Workflow
+
+1. **Upload / drop an image** (or sample creature / blank paper)
+2. **Draw** — freehand closed strokes over the photo
+3. **Next → Inflate** — soft balloon mesh with photo vertex colors; orbit with drag
+4. **Next → Animate** — place pins, record keyframes on the timeline
+5. **Export** — binary glTF (`.glb`) + project JSON
+
+Optional **Mint NFT** (user-initiated, for a fee) is planned — button is stubbed as SOON.
+
+## Local dev
 
 ```bash
-git clone https://github.com/Koolskull/skullmash.git
-cd skullmash
 npm install
 npm run dev
 ```
 
-## Workflow
+```bash
+npm run build   # production → dist/
+npm run preview
+```
 
-1. **DRAW** — Click points to form a closed shape. Right-click, Enter, or CLOSE SHAPE when ≥3 points.
-2. Optional: load a background image and trace cutouts over it.
-3. **INFLATE** — Meshes rebuild automatically (earcut + radial height falloff).
-4. **ANIMATE** — Click yellow pins. Move the timeline and hit REC KF.
-5. **EXPORT**
-   - `.glb` — binary glTF of the inflated meshes
-   - `.json` — project + pin + keyframe data for Stardrain / custom players
+## Stack
 
-## Integration with K-OS-III
+React 19 · Vite · Three.js · earcut · Tailwind v4 · lucide
 
-Standalone Vite + React app that can later become a windowed app inside the K-OS desktop (`src/components/apps/skullmash/...`). Aesthetic already matches KOOLDRAW / DATAMOSHPIT / SHOTLIST.
+## Notes
 
-## Audit notes (v0.1.1)
+- v0.3.0 — Monster Mash–style paper stage, image-first welcome, freehand inflate fix, GitHub Pages deploy
+- Pair exported `.glb` with the JSON for pin playback in Stardrain / custom players
+- Full OS shell integration lives in K-OS-III (`src/components/apps/skullmash/`)
 
-- Removed unused helpers and the discarded earcut path; now uses earcut properly.
-- Shared material + full geometry/material dispose on rebuild and unmount.
-- Background image object URLs are revoked.
-- Right-click / left-click handling cleaned; status no longer uses stale closures.
-- Keyboard Enter closes the current shape; dependency arrays corrected.
-
-## Roadmap
-
-- Better height field / multi-region depth order
-- Pin-driven deformation driven by keyframes
-- Embed mode for other K-OS apps
-- Optional future WASM path closer to original Monster Mash algorithms
-
-Inspired by [google/monster-mash](https://github.com/google/monster-mash) (still live at monstermash.zone). Apache-2.0 spirit.
-
-☦
+Inspired by [google/monster-mash](https://github.com/google/monster-mash).
